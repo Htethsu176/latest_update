@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Lists</title>
+    <link rel="stylesheet" href="view.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Request Ticket Lists</h1>
+        </div>
+        <div class="function">
+            <div class="searchFunction">
+                <i class="fa fa-search"></i>
+                <input type="text" id="myInput" onkeyup="searchTable" placeholder="Enter names...">
+                <span class="searchClose">&times;</span>
+            </div>
+            <div class="sortFunction">
+                <label>Status: </label>
+                <select id="select" class="select" onchange="filterTable">
+                    <option id="all" value="all" selected>All</option>
+                    <option id="new" value="new">New</option>
+                    <option id="in-progress" value="in progress">In progress</option>
+                    <option id="resolve" value="resolve">Resolve</option>
+                </select>
+                <button id="sortButton" class="sortButton" onclick="sortTable">Sort by Id</button>
+                <button id="sortByNo" class="sortByNo" onclick="sortTable">Sort by No</button>
+            </div>
+        </div><br><br>
+        <div class="tableBox">
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Custome Id</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Phone No</th>
+                        <th>Issue</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="Button">
+            <button id="prevPage" class="prevPage" onclick="prevPage">Previous</button>
+            <span id="currentPage"></span> / <span id="totalPages"></span>
+            <button id="nextPage" class="nextPage" onclick="nextPage">Next</button>
+            <button class="addButton" onclick="document.location='form.html'"><i class="fa fa-plus"></i>Add New Ticket</button>
+        </div>
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="model-header">
+                <span class="close">&times;</span>
+                <h2>Issue</h2>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <p></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let rowsPerPage = 10;
+        let data = [];
+        let originalData = [];
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            fetch("data.json")
+                .then(response => response.json())
+                .then(initialData => {
+                    data = initialData;
+                    originalData = [...initialData];
+                    createTable(data);
+
+                    document.getElementById('myInput').addEventListener('keyup', function () {
+                        currentPage = 1;
+                        searchTable(data);
+                        paginateTable();
+                    });
+
+                    document.getElementById('select').addEventListener('change', function () {
+                        currentPage = 1;
+                        filterTable(data);
+                        paginateTable();
+                    });
+
+                    document.getElementById('sortButton').addEventListener('click', function () {
+                        currentPage = 1; 
+                        sortTable(data);
+                        paginateTable();
+                    });
+
+                    document.getElementById('sortByNo').addEventListener('click', function () {
+                        currentPage = 1; 
+                        sortTableByNo(data);
+                        paginateTable();
+                    });
+
+                    document.getElementById('prevPage').addEventListener('click', function () {
+                        prevPage();
+                        paginateTable();
+                    });
+                    document.getElementById('nextPage').addEventListener('click', function () {
+                        nextPage();
+                        paginateTable();
+                    });
+
+                    paginateTable(); 
+                });
+        });
+        function searchTable() {
+            const searchInput = document.getElementById('myInput').value.toLowerCase();
+            const selectedStatus = document.getElementById('select').value.toLowerCase();
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            const span = document.getElementsByClassName('searchClose')[0];
+
+            if (event.key === 'Enter') {
+
+                const filteredData = originalData.filter(item => item.name.toLowerCase().includes(searchInput));
+
+                tableBody.innerHTML = '';
+                data = filteredData;
+
+                createTable(filteredData);
+                paginateTable(filteredData);
+
+                console.log(filteredData);
+
+            }
+
+            span.onclick = function () {
+
+                document.getElementById('myInput').value = '';
+                tableBody.innerHTML = '';
+
+                if (myInput.value === '') {
+
+                    data = [...originalData];
+                    document.getElementById('select').value = 'all';
+                    createTable(originalData);
+                    paginateTable(originalData);
+
+                    console.log(originalData);
+                }
+
+            };
+
+        };
+
+        function createTable(data) {
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = data.slice(start, end);
+
+            tableBody.innerHTML = '';
+
+            const statusColorMap = {
+                'new': 'red',
+                'in progress': 'green',
+                'resolve': 'blue'
+            };
+
+            paginatedData.forEach(item => {
+                const row = tableBody.insertRow();
+
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                const cell4 = row.insertCell(3);
+                const cell5 = row.insertCell(4);
+                const cell6 = row.insertCell(5);
+                const cell7 = row.insertCell(6);
+                const cell8 = row.insertCell(7);
+
+                cell1.textContent = item.no;
+                cell2.textContent = item.name;
+                cell3.textContent = item.id;
+                cell4.textContent = item.location;
+                cell5.textContent = item.date;
+
+                const statusColor = statusColorMap[item.status.toLowerCase()] || 'black';
+                cell6.textContent = item.status;
+                cell6.style.color = statusColor;
+
+                cell7.textContent = item.phone;
+
+                const viewIcon = document.createElement('i');
+                viewIcon.className = 'fa fa-eye';
+                viewIcon.addEventListener('click', function () {
+                    openModal(item.issue);
+                });
+
+                cell8.appendChild(viewIcon);
+            });
+        }
+
+        function filterTable() {
+            const searchInput = document.getElementById('myInput').value.toLowerCase();
+            const selectedStatus = document.getElementById('select').value.toLowerCase();
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            const selectedData = originalData.filter(item => item.status.toLowerCase() === selectedStatus.toLowerCase() && item.name.toLowerCase().includes(searchInput))
+
+            if (selectedStatus === 'all') {
+                tableBody.innerHTML = '';
+
+                data = [...originalData];
+                document.getElementById('myInput').value = '';
+
+                createTable(originalData);
+                paginateTable(originalData);
+                console.log(originalData);
+            }
+            else {
+                tableBody.innerHTML = '';
+
+                data = selectedData;
+
+                createTable(selectedData);
+                paginateTable(selectedData);
+                console.log(selectedData);
+            }
+
+
+        }
+
+        function sortTable() {
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            const sortedData = data.sort((a, b) => a.id - b.id);
+
+            tableBody.innerHTML = '';
+
+            createTable(sortedData);
+
+            paginateTable(sortedData);
+            console.log(sortedData);
+        };
+
+        function sortTableByNo() {
+            const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            const sortedData = data.sort((a, b) => a.no - b.no);
+
+            tableBody.innerHTML = '';
+
+            createTable(sortedData);
+
+            paginateTable(sortedData);
+            console.log(sortedData);
+        };
+
+        function paginateTable() {
+            const totalPages = Math.ceil(data.length / rowsPerPage);
+            const currentPageSpan = document.getElementById('currentPage');
+            const totalPagesSpan = document.getElementById('totalPages');
+
+            currentPageSpan.textContent = currentPage;
+            totalPagesSpan.textContent = totalPages;
+
+            createTable(data);
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(originalData.length / rowsPerPage);
+
+            if (currentPage < totalPages) {
+                currentPage++;
+                paginateTable();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                paginateTable();
+            }
+        }
+
+        function openModal(issueData) {
+            const modal = document.getElementById('myModal');
+            const modalBody = document.getElementById('modal-body');
+            const span = document.getElementsByClassName('close')[0];
+
+            modal.style.display = 'block';
+            modalBody.innerHTML = `<p> ${issueData} </p>`;
+
+            span.onclick = function () {
+                modal.style.display = 'none';
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+@import url();
+*{
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+body { 
+    /* background-color: rgb(255, 255, 255); */
+     background: url(background.jpg);
+}
+.header{
+    width: 750px;
+    background-color: rgb(45, 132, 212);
+    margin: auto;
+}
+h1 {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+    text-align: center;   
+} 
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+fieldset{
+    border-color: rgb(218, 237, 255);
+    background-color: rgb(255, 255, 255);
+    border-radius: 2px;
+}
+p{
+    color: rgb(75, 75, 75);
+}
+span{
+    color: rgb(0, 0, 0);
+}
+input, select {
+    width: 100%;
+    border: 1px solid #bebebe;
+    border-radius: 4px;
+    background-color: rgb(245, 250, 255);
+    padding: 20px;
+}
+.buttons{
+    text-align: center;
+}
+
+button {
+    height: 40px;
+    width: 90%;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+    color: #ffffff;
+    background-color: rgb(45, 132, 212);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+button:hover{
+    background-color: rgb(33, 117, 243);
+    color: white;
+}
+
+

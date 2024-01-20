@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Ticket Form</title>
+    <link rel="stylesheet" href="form.css" /> 
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+</head>
+<body>
+    <div class="header">
+        <h1>Request Ticket Form</h1>
+    </div>  
+    <div class="container">
+        
+        <form action="#">
+            <fieldset>
+                <p> Please fill in this form to request tickets.</p>
+                <div class="form">
+                    <div class="field">
+                       
+                        <span class="details" style="font-size: 18px;"> Full Name </span><br>
+                        <!-- <span class="form-required">*</span><br> -->
+                        <input tpye="text" id="fullname" name="fullname" placeholder="Enter your name" size="30" required><br><br>
+    
+                        <span class="details" style="font-size: 18px;"> Customer Id </span><br>
+                        <input name="customerId" id="customerId" placeholder="163791" pattern="[0-9]{6}" size="30" required><br><br>
+
+                        <span class="details" style="font-size: 18px;"> Phone No </span><br>   
+                        <input type="text" id="phones" name="phones" placeholder="## ### ### ###" pattern="[0-9]{2}[0-9]{3}[0-9]{3}[0-9]{3}" size="30" required><br><br>
+
+                        <span class="details" id="dates" style="font-size: 18px;"> Date of request </span><br>
+                        <input type="date" name="date"  required><br><br>
+
+                        <span class="details" style="font-size: 18px;"> Location </span><br>
+                        <select id="location" >
+                            <option value="" disabled selected>Choose your location</option>
+                            <option value="City A"> City A </option>
+                            <option value="City B"> City B </option>
+                            <option value="City C"> City C </option>
+                            <option value="City D"> City D </option>
+                            <option value="City E"> City E </option>
+                            <option value="City F"> City F </option>
+                            <option value="City A"> City G </option>
+                            <option value="City B"> City H </option>
+                            <option value="City C"> City I </option>
+                            <option value="City D"> City J </option>
+                            <option value="City E"> City K </option>
+                            <option value="City F"> City L </option>
+                        </select required><br><br>
+
+                        <span class="details" style="font-size: 18px;"> Issue </span><br>
+                        <select id="issue" style="width: 700px; height: 60px">
+                            <option value="" disabled selected>Choose your issue</option>
+                            <option value="issue1"> Intermittent Connectivity </option>
+                            <option value="issue2"> Slow Internet Speed </option>
+                            <option value="issue3"> Device Connectivity </option>
+                            <option value="issue4"> Router Overheating </option>
+                            <option value="issue5"> Network Password or Security Concerns </option>
+                            <option value="issue6"> No Internet Access </option>
+                        </select required><br><br>
+                    </div>
+                </div>
+                </fieldset><br>
+
+                <div class="buttons">
+                    <!-- <button type="submit" class="submit" onclick="document.location='//localhost:8080/view.html'">View Tickets</button> -->
+                    <button type="submit" class="submit" alert="Are you sure?">Submit</button>
+                </div>
+        </form>
+    </div>
+</body>
+</html>
